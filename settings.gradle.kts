@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Amplify Shopping"
-include ':app'
+include(":app")

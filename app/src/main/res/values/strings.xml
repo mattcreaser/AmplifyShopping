@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Amplify Shopping</string>
+
+    <string name="title_add_item">Add Item</string>
+    <string name="label_item_name">Item Name</string>
+    <string name="action_save">Save</string>
 </resources>
