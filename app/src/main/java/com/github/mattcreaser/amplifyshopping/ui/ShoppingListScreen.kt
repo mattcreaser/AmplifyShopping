@@ -3,6 +3,7 @@ package com.github.mattcreaser.amplifyshopping.ui
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
@@ -19,10 +20,16 @@ fun ShoppingListScreen() {
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { addItemDialogVisible = true }) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Filled.Add),
-                    contentDescription = stringResource(R.string.title_add_item)
+            AddItemButton(onClick = { addItemDialogVisible = true })
+        },
+        topBar = {
+            TopAppBar {
+                val lists by viewModel.lists.collectAsState(initial = emptyList())
+                ShoppingListSelector(
+                    lists = lists,
+                    selectedList = viewModel.selectedList,
+                    onAddList = { viewModel.saveList(it) },
+                    onSelectList = { viewModel.selectedList = it }
                 )
             }
         }
@@ -39,5 +46,15 @@ fun ShoppingListScreen() {
                 }
             )
         }
+    }
+}
+
+@Composable
+fun AddItemButton(onClick: () -> Unit) {
+    FloatingActionButton(onClick = onClick) {
+        Icon(
+            painter = rememberVectorPainter(Icons.Filled.Add),
+            contentDescription = stringResource(R.string.title_add_item)
+        )
     }
 }
