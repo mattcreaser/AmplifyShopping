@@ -18,6 +18,8 @@ fun ShoppingListScreen() {
     var addItemDialogVisible by remember { mutableStateOf(false) }
     val viewModel = viewModel<ShoppingListViewModel>()
 
+    val selectedList by viewModel.selectedList.collectAsState(null)
+
     Scaffold(
         floatingActionButton = {
             AddItemButton(onClick = { addItemDialogVisible = true })
@@ -27,9 +29,9 @@ fun ShoppingListScreen() {
                 val lists by viewModel.lists.collectAsState(initial = emptyList())
                 ShoppingListSelector(
                     lists = lists,
-                    selectedList = viewModel.selectedList,
-                    onAddList = { viewModel.saveList(it) },
-                    onSelectList = { viewModel.selectedList = it }
+                    selectedList = selectedList,
+                    onAddList = viewModel::saveList,
+                    onSelectList = viewModel::selectList
                 )
             }
         }

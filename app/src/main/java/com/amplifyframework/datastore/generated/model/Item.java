@@ -24,11 +24,14 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 @ModelConfig(pluralName = "Items", authRules = {
   @AuthRule(allow = AuthStrategy.PUBLIC, operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ })
 })
+@Index(name = "byShoppingList", fields = {"shoppinglistID"})
 public final class Item implements Model {
   public static final QueryField ID = field("Item", "id");
   public static final QueryField LABEL = field("Item", "label");
+  public static final QueryField SHOPPINGLIST_ID = field("Item", "shoppinglistID");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String") String label;
+  private final @ModelField(targetType="ID", isRequired = true) String shoppinglistID;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String getId() {
@@ -39,6 +42,10 @@ public final class Item implements Model {
       return label;
   }
   
+  public String getShoppinglistId() {
+      return shoppinglistID;
+  }
+  
   public Temporal.DateTime getCreatedAt() {
       return createdAt;
   }
@@ -47,9 +54,10 @@ public final class Item implements Model {
       return updatedAt;
   }
   
-  private Item(String id, String label) {
+  private Item(String id, String label, String shoppinglistID) {
     this.id = id;
     this.label = label;
+    this.shoppinglistID = shoppinglistID;
   }
   
   @Override
@@ -62,6 +70,7 @@ public final class Item implements Model {
       Item item = (Item) obj;
       return ObjectsCompat.equals(getId(), item.getId()) &&
               ObjectsCompat.equals(getLabel(), item.getLabel()) &&
+              ObjectsCompat.equals(getShoppinglistId(), item.getShoppinglistId()) &&
               ObjectsCompat.equals(getCreatedAt(), item.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), item.getUpdatedAt());
       }
@@ -72,6 +81,7 @@ public final class Item implements Model {
     return new StringBuilder()
       .append(getId())
       .append(getLabel())
+      .append(getShoppinglistId())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -84,13 +94,14 @@ public final class Item implements Model {
       .append("Item {")
       .append("id=" + String.valueOf(getId()) + ", ")
       .append("label=" + String.valueOf(getLabel()) + ", ")
+      .append("shoppinglistID=" + String.valueOf(getShoppinglistId()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
       .toString();
   }
   
-  public static BuildStep builder() {
+  public static ShoppinglistIdStep builder() {
       return new Builder();
   }
   
@@ -105,14 +116,21 @@ public final class Item implements Model {
   public static Item justId(String id) {
     return new Item(
       id,
+      null,
       null
     );
   }
   
   public CopyOfBuilder copyOfBuilder() {
     return new CopyOfBuilder(id,
-      label);
+      label,
+      shoppinglistID);
   }
+  public interface ShoppinglistIdStep {
+    BuildStep shoppinglistId(String shoppinglistId);
+  }
+  
+
   public interface BuildStep {
     Item build();
     BuildStep id(String id);
@@ -120,8 +138,9 @@ public final class Item implements Model {
   }
   
 
-  public static class Builder implements BuildStep {
+  public static class Builder implements ShoppinglistIdStep, BuildStep {
     private String id;
+    private String shoppinglistID;
     private String label;
     @Override
      public Item build() {
@@ -129,7 +148,15 @@ public final class Item implements Model {
         
         return new Item(
           id,
-          label);
+          label,
+          shoppinglistID);
+    }
+    
+    @Override
+     public BuildStep shoppinglistId(String shoppinglistId) {
+        Objects.requireNonNull(shoppinglistId);
+        this.shoppinglistID = shoppinglistId;
+        return this;
     }
     
     @Override
@@ -150,9 +177,15 @@ public final class Item implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String label) {
+    private CopyOfBuilder(String id, String label, String shoppinglistId) {
       super.id(id);
-      super.label(label);
+      super.shoppinglistId(shoppinglistId)
+        .label(label);
+    }
+    
+    @Override
+     public CopyOfBuilder shoppinglistId(String shoppinglistId) {
+      return (CopyOfBuilder) super.shoppinglistId(shoppinglistId);
     }
     
     @Override
