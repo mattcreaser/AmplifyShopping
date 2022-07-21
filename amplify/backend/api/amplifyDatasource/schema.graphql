@@ -1,7 +1,27 @@
+type Quantity {
+  amount: Float!
+  unit: QuantityUnit
+}
+
+enum QuantityUnit {
+  L
+  ML
+  G
+  KG
+  MG
+  OZ
+  LB
+  CUP
+  TSP
+  TBSP
+}
+
 type Item @model @auth(rules: [{allow: public}]) {
   id: ID!
-  label: String
+  label: String!
   shoppinglistID: ID! @index(name: "byShoppingList")
+  quantity: Quantity
+  note: String
 }
 
 type ShoppingList @model @auth(rules: [{allow: public}]) {

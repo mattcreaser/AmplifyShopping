@@ -3,6 +3,7 @@
 
     <string name="title_add_item">Add Item</string>
     <string name="label_item_name">Item Name</string>
+    <string name="label_quantity">Quantity</string>
     <string name="action_save">Save</string>
 
     <string name="label_add_list">Add List</string>

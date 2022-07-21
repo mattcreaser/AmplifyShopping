@@ -42,9 +42,9 @@ fun ShoppingListScreen() {
         if (addItemDialogVisible) {
             AddItemDialog(
                 onDismiss = { addItemDialogVisible = false },
-                onSave = {
+                onSave = { label, quantity, unit ->
                     addItemDialogVisible = false
-                    viewModel.saveItem(it)
+                    viewModel.saveItem(label, quantity, unit)
                 }
             )
         }

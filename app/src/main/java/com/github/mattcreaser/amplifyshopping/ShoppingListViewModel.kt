@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.amplifyframework.core.model.query.ObserveQueryOptions
 import com.amplifyframework.datastore.generated.model.Item
+import com.amplifyframework.datastore.generated.model.Quantity
+import com.amplifyframework.datastore.generated.model.QuantityUnit
 import com.amplifyframework.datastore.generated.model.ShoppingList
 import com.amplifyframework.kotlin.core.Amplify
 import kotlinx.coroutines.flow.*
@@ -34,14 +36,23 @@ class ShoppingListViewModel : ViewModel() {
         }
     }
 
-    fun saveItem(label: String) {
+    fun saveItem(label: String, amount: Float?, unit: QuantityUnit?) {
         val listId = selectedList.value?.id
         if (listId != null) {
             viewModelScope.launch {
-                val item = Item.Builder()
-                    .shoppinglistId(listId)
+                val builder = Item.Builder()
                     .label(label)
-                    .build()
+                    .shoppinglistId(listId)
+
+                if (amount != null) {
+                    val quantity = Quantity.Builder()
+                        .amount(amount.toDouble())
+                        .unit(unit)
+                        .build()
+                    builder.quantity(quantity)
+                }
+
+                val item = builder.build()
                 Amplify.DataStore.save(item)
             }
         }
