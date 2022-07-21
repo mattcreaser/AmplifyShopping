@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.ExposedDropdownMenuDefaults.TrailingIcon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,7 +36,7 @@ val Quantity.displayValue
     @ReadOnlyComposable
     get() = when (unit) {
         null -> QuantityFormat.format(amount)
-        else -> "$amount ${unit.displayName}"
+        else -> "${QuantityFormat.format(amount)} ${unit.displayName}"
     }
 
 @Composable
@@ -91,6 +92,7 @@ fun AddItemDialog(
                 )
                 Row {
                     OutlinedTextField(
+                        modifier = Modifier.weight(0.6f),
                         value = quantity,
                         onValueChange = {
                             quantity = when (it.toDoubleOrNull()) {
@@ -102,8 +104,65 @@ fun AddItemDialog(
                         label = { Text(stringResource(R.string.label_quantity)) },
                         singleLine = true
                     )
+                    UnitSelector(
+                        selectedUnit = unit,
+                        onUnitSelect = { unit = it },
+                        modifier = Modifier
+                            .weight(0.4f)
+                            .padding(start = AppTheme.dimens.grid_1, top = AppTheme.dimens.grid_1)
+                    )
                 }
             }
         }
     )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun UnitSelector(
+    selectedUnit: QuantityUnit?,
+    onUnitSelect: (QuantityUnit?) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    val options = QuantityUnit.values()
+
+    ExposedDropdownMenuBox(
+        modifier = modifier,
+        expanded = expanded,
+        onExpandedChange = {
+            expanded = !expanded
+        }
+    ) {
+        OutlinedTextField(
+            readOnly = true,
+            value = selectedUnit?.displayName ?: "",
+            onValueChange = { },
+            trailingIcon = { TrailingIcon(expanded = expanded) }
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            }
+        ) {
+            DropdownMenuItem(onClick = {
+                onUnitSelect(null)
+                expanded = false
+            }) {
+                Text("-")
+            }
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    onClick = {
+                        onUnitSelect(selectionOption)
+                        expanded = false
+                    }
+                ) {
+                    Text(text = selectionOption.displayName)
+                }
+            }
+        }
+    }
 }

@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 class ShoppingListViewModel : ViewModel() {
 
     val lists = flow {
-        Amplify.DataStore.observeQuery(ShoppingList::class, ObserveQueryOptions()).collect {
+        val options = ObserveQueryOptions(null, listOf(ShoppingList.LABEL.ascending()))
+        Amplify.DataStore.observeQuery(ShoppingList::class, options).collect {
             if (_selectedList.value == null) {
                 _selectedList.value = it.items.firstOrNull()
             }
@@ -29,7 +30,7 @@ class ShoppingListViewModel : ViewModel() {
         val listId = currentList?.id
         if (listId != null) {
             val predicate = Item.SHOPPINGLIST_ID.eq(listId)
-            val options = ObserveQueryOptions(predicate, null)
+            val options = ObserveQueryOptions(predicate, listOf(Item.LABEL.ascending()))
             Amplify.DataStore.observeQuery(Item::class, options).map { it.items }
         } else {
             emptyFlow()
