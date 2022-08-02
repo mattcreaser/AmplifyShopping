@@ -1,7 +1,9 @@
 package com.github.mattcreaser.amplifyshopping.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -40,8 +42,12 @@ val Quantity.displayValue
     }
 
 @Composable
-fun Item(item: Item) {
-    Column(modifier = Modifier.padding(AppTheme.dimens.grid_2)) {
+fun Item(item: Item, onClick: (Item) -> Unit) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .clickable { onClick(item) }
+        .padding(AppTheme.dimens.grid_2)
+    ) {
         Text(text = item.label)
         item.quantity?.let {
             Text(it.displayValue, style = AppTheme.typography.caption)
@@ -50,11 +56,11 @@ fun Item(item: Item) {
 }
 
 @Composable
-fun ItemList(listItems: List<Item>) {
+fun ItemList(listItems: List<Item>, onItemClick: (Item) -> Unit) {
     LazyColumn {
         items(items = listItems, key = { it.id }) { item ->
             Column {
-                Item(item)
+                Item(item, onClick = onItemClick)
                 Divider()
             }
         }

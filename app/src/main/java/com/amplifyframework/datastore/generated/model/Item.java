@@ -29,13 +29,13 @@ public final class Item implements Model {
   public static final QueryField ID = field("Item", "id");
   public static final QueryField LABEL = field("Item", "label");
   public static final QueryField SHOPPINGLIST_ID = field("Item", "shoppinglistID");
-  public static final QueryField QUANTITY = field("Item", "quantity");
   public static final QueryField NOTE = field("Item", "note");
+  public static final QueryField QUANTITY = field("Item", "quantity");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String label;
   private final @ModelField(targetType="ID", isRequired = true) String shoppinglistID;
-  private final @ModelField(targetType="Quantity") Quantity quantity;
   private final @ModelField(targetType="String") String note;
+  private final @ModelField(targetType="Quantity") Quantity quantity;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String getId() {
@@ -50,12 +50,12 @@ public final class Item implements Model {
       return shoppinglistID;
   }
   
-  public Quantity getQuantity() {
-      return quantity;
-  }
-  
   public String getNote() {
       return note;
+  }
+  
+  public Quantity getQuantity() {
+      return quantity;
   }
   
   public Temporal.DateTime getCreatedAt() {
@@ -66,12 +66,12 @@ public final class Item implements Model {
       return updatedAt;
   }
   
-  private Item(String id, String label, String shoppinglistID, Quantity quantity, String note) {
+  private Item(String id, String label, String shoppinglistID, String note, Quantity quantity) {
     this.id = id;
     this.label = label;
     this.shoppinglistID = shoppinglistID;
-    this.quantity = quantity;
     this.note = note;
+    this.quantity = quantity;
   }
   
   @Override
@@ -85,8 +85,8 @@ public final class Item implements Model {
       return ObjectsCompat.equals(getId(), item.getId()) &&
               ObjectsCompat.equals(getLabel(), item.getLabel()) &&
               ObjectsCompat.equals(getShoppinglistId(), item.getShoppinglistId()) &&
-              ObjectsCompat.equals(getQuantity(), item.getQuantity()) &&
               ObjectsCompat.equals(getNote(), item.getNote()) &&
+              ObjectsCompat.equals(getQuantity(), item.getQuantity()) &&
               ObjectsCompat.equals(getCreatedAt(), item.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), item.getUpdatedAt());
       }
@@ -98,8 +98,8 @@ public final class Item implements Model {
       .append(getId())
       .append(getLabel())
       .append(getShoppinglistId())
-      .append(getQuantity())
       .append(getNote())
+      .append(getQuantity())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -113,8 +113,8 @@ public final class Item implements Model {
       .append("id=" + String.valueOf(getId()) + ", ")
       .append("label=" + String.valueOf(getLabel()) + ", ")
       .append("shoppinglistID=" + String.valueOf(getShoppinglistId()) + ", ")
-      .append("quantity=" + String.valueOf(getQuantity()) + ", ")
       .append("note=" + String.valueOf(getNote()) + ", ")
+      .append("quantity=" + String.valueOf(getQuantity()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
@@ -147,8 +147,8 @@ public final class Item implements Model {
     return new CopyOfBuilder(id,
       label,
       shoppinglistID,
-      quantity,
-      note);
+      note,
+      quantity);
   }
   public interface LabelStep {
     ShoppinglistIdStep label(String label);
@@ -163,8 +163,8 @@ public final class Item implements Model {
   public interface BuildStep {
     Item build();
     BuildStep id(String id);
-    BuildStep quantity(Quantity quantity);
     BuildStep note(String note);
+    BuildStep quantity(Quantity quantity);
   }
   
 
@@ -172,8 +172,8 @@ public final class Item implements Model {
     private String id;
     private String label;
     private String shoppinglistID;
-    private Quantity quantity;
     private String note;
+    private Quantity quantity;
     @Override
      public Item build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
@@ -182,8 +182,8 @@ public final class Item implements Model {
           id,
           label,
           shoppinglistID,
-          quantity,
-          note);
+          note,
+          quantity);
     }
     
     @Override
@@ -201,14 +201,14 @@ public final class Item implements Model {
     }
     
     @Override
-     public BuildStep quantity(Quantity quantity) {
-        this.quantity = quantity;
+     public BuildStep note(String note) {
+        this.note = note;
         return this;
     }
     
     @Override
-     public BuildStep note(String note) {
-        this.note = note;
+     public BuildStep quantity(Quantity quantity) {
+        this.quantity = quantity;
         return this;
     }
     
@@ -224,12 +224,12 @@ public final class Item implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String label, String shoppinglistId, Quantity quantity, String note) {
+    private CopyOfBuilder(String id, String label, String shoppinglistId, String note, Quantity quantity) {
       super.id(id);
       super.label(label)
         .shoppinglistId(shoppinglistId)
-        .quantity(quantity)
-        .note(note);
+        .note(note)
+        .quantity(quantity);
     }
     
     @Override
@@ -243,13 +243,13 @@ public final class Item implements Model {
     }
     
     @Override
-     public CopyOfBuilder quantity(Quantity quantity) {
-      return (CopyOfBuilder) super.quantity(quantity);
+     public CopyOfBuilder note(String note) {
+      return (CopyOfBuilder) super.note(note);
     }
     
     @Override
-     public CopyOfBuilder note(String note) {
-      return (CopyOfBuilder) super.note(note);
+     public CopyOfBuilder quantity(Quantity quantity) {
+      return (CopyOfBuilder) super.quantity(quantity);
     }
   }
   

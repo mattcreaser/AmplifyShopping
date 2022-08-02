@@ -37,7 +37,7 @@ fun ShoppingListScreen() {
         }
     ) {
         val items by viewModel.items.collectAsState(initial = emptyList())
-        ItemList(listItems = items)
+        ItemList(listItems = items, onItemClick = { })
 
         if (addItemDialogVisible) {
             AddItemDialog(

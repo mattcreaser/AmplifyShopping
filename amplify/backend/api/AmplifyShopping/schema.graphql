@@ -3,6 +3,12 @@ type Quantity {
   unit: QuantityUnit
 }
 
+type ShoppingList @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  label: String
+  Items: [Item] @hasMany(indexName: "byShoppingList", fields: ["id"])
+}
+
 enum QuantityUnit {
   L
   ML
@@ -20,12 +26,6 @@ type Item @model @auth(rules: [{allow: public}]) {
   id: ID!
   label: String!
   shoppinglistID: ID! @index(name: "byShoppingList")
-  quantity: Quantity
   note: String
-}
-
-type ShoppingList @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  label: String
-  Items: [Item] @hasMany(indexName: "byShoppingList", fields: ["id"])
+  quantity: Quantity
 }
