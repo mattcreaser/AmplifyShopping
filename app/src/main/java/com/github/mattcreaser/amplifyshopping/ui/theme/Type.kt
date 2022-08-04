@@ -1,7 +1,6 @@
 package com.github.mattcreaser.amplifyshopping.ui.theme
 
 import androidx.compose.material.Typography
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -15,5 +14,3 @@ val Typography = Typography(
         fontSize = 16.sp
     )
 )
-
-val LocalTypography = staticCompositionLocalOf { Typography }

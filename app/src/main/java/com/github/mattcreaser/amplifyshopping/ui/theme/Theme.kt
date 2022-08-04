@@ -42,10 +42,15 @@ object AppTheme {
     val typography
         @Composable
         @ReadOnlyComposable
-        get() = LocalTypography.current
-    
+        get() = MaterialTheme.typography
+
     val dimens
         @Composable
         @ReadOnlyComposable
         get() = LocalDimens.current
+
+    val colors
+        @Composable
+        @ReadOnlyComposable
+        get() = MaterialTheme.colors
 }

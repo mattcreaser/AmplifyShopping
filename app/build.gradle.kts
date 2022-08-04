@@ -50,21 +50,22 @@ android {
 }
 
 dependencies {
-
+    // AndroidX
     implementation(Deps.core_ktx)
+    implementation(Deps.lifecycle_ktx)
 
+    // Compose
     implementation(Deps.compose_ui)
     implementation(Deps.compose_material)
     implementation(Deps.compose_tooling)
     implementation(Deps.compose_activity)
     implementation(Deps.compose_viewmodel)
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
-
     // Amplify plugins
     implementation(Deps.amplify_core)
     implementation(Deps.amplify_api)
     implementation(Deps.amplify_datastore)
+    implementation(Deps.amplify_auth)
 
     // Support for Java 8 features
     coreLibraryDesugaring(Deps.desugar)
