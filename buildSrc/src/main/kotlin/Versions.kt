@@ -9,5 +9,5 @@ object Versions {
     const val amplify = "1.36.2"
     const val amplify_ktx = "0.20.2"
 
-    const val desugar = "1.0.9"
+    const val desugar = "1.1.6"
 }
